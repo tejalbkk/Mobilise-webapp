@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B5FB0">
+<title>Mobilise Tap — Act right now</title>
+<style>
+  :root{
+    --blue-deep:#0B5FB0; --blue:#1C9DE0; --teal:#12B5C9; --green:#8CC63F;
+    --navy:#0A2A43; --ink:#173649; --muted:#66808f; --bg:#EEF6FC; --card:#fff;
+    --line:#e0ecf4;
+    --grad:linear-gradient(135deg,#0B5FB0 0%,#1C9DE0 42%,#12B5C9 72%,#8CC63F 100%);
+    --shadow:0 10px 30px rgba(11,95,176,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5}
+  .app{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg);
+    position:relative;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+  .screen{display:none;min-height:100vh;flex-direction:column}
+  .screen.active{display:flex;animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .topbar{background:var(--grad);color:#fff;padding:16px 20px 18px;display:flex;align-items:center;gap:10px}
+  .brand{font-weight:800;letter-spacing:.02em;font-size:16px}
+  .brand small{display:block;font-weight:600;font-size:10.5px;letter-spacing:.14em;opacity:.9;text-transform:uppercase}
+  .back{background:rgba(255,255,255,.2);border:0;color:#fff;width:34px;height:34px;border-radius:10px;
+    font-size:18px;cursor:pointer;flex:0 0 auto}
+  .body{padding:20px;flex:1}
+  h1{font-size:24px;margin:0 0 6px;color:var(--navy);letter-spacing:-.3px}
+  h2{font-size:19px;margin:0 0 4px;color:var(--navy)}
+  p{margin:0 0 12px}.muted{color:var(--muted);font-size:14px}
+
+  .scan-hero{background:var(--grad);color:#fff;flex:1;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;padding:40px 26px}
+  .scan-hero .badge{width:70px;height:70px;border-radius:20px;background:rgba(255,255,255,.18);
+    display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:34px}
+  .scan-hero h1{color:#fff;font-size:30px;line-height:1.1}
+  .scan-hero p{opacity:.95;max-width:300px}
+  .btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:16px;
+    font-weight:700;cursor:pointer;text-align:center;transition:transform .06s ease}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-white{background:#fff;color:var(--blue-deep)}
+  .btn-green{background:var(--green);color:#123}
+  .btn-ghost{background:#fff;color:var(--blue-deep);border:1.5px solid var(--line)}
+
+  .pcard{background:var(--card);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
+  .pcard .head{display:flex;gap:14px;padding:18px;align-items:center}
+  .avatar{width:66px;height:66px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;
+    justify-content:center;color:#fff;font-weight:800;font-size:26px;background:var(--grad)}
+  .pcard .name{font-size:20px;font-weight:800;color:var(--navy);line-height:1.1}
+  .verified{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;
+    color:#1a7a2e;background:#e7f7ea;padding:3px 9px;border-radius:999px;margin-top:6px}
+  .story{padding:0 18px 16px;font-size:14.5px;color:var(--ink)}
+  .goal{margin:0 18px 18px;background:#f3f9fd;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .goal .glabel{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--blue-deep)}
+  .goal .gtext{font-size:15px;color:var(--navy);margin:5px 0 10px;font-weight:600}
+  .bar{height:12px;border-radius:999px;background:#dceaf5;overflow:hidden}
+  .bar > i{display:block;height:100%;width:62%;background:var(--grad);border-radius:999px}
+  .goal .gstat{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:7px;font-weight:600}
+
+  .menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
+    cursor:pointer;box-shadow:var(--shadow);text-align:left;transition:transform .06s,border-color .15s}
+  .opt:active{transform:scale(.98)}
+  .opt:hover{border-color:var(--blue)}
+  .opt .ic{font-size:26px}
+  .opt .t{font-weight:800;color:var(--navy);margin-top:8px;font-size:16px}
+  .opt .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  .amts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0}
+  .amt{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 6px;text-align:center;
+    cursor:pointer;font-weight:800;color:var(--navy)}
+  .amt.sel{border-color:var(--blue);background:#eaf5fd;color:var(--blue-deep)}
+  .amt small{display:block;font-weight:600;color:var(--muted);font-size:10.5px;margin-top:2px}
+  .field{width:100%;padding:14px;border:1.5px solid var(--line);border-radius:12px;font-size:15px;margin:6px 0 12px}
+  .row-info{background:#f3f9fd;border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);margin:12px 0}
+  .row-info b{color:var(--navy)}
+
+  .summary{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+  .summary .line{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+  .summary .line:last-child{border-bottom:0;font-weight:800;color:var(--navy);font-size:16px}
+  .tick{width:86px;height:86px;border-radius:50%;background:var(--green);display:flex;align-items:center;
+    justify-content:center;color:#fff;font-size:44px;margin:10px auto 18px;box-shadow:0 8px 24px rgba(140,198,63,.4)}
+  .later{background:#fff;border:1px dashed var(--blue);border-radius:16px;padding:16px;margin-top:18px}
+  .later .tag{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--blue);text-transform:uppercase}
+  .later .msg{display:flex;gap:10px;align-items:flex-start;margin-top:10px}
+  .later .msg .a{width:34px;height:34px;border-radius:50%;background:var(--grad);flex:0 0 auto}
+  .later .bubble{background:#f0f7fc;border-radius:14px;border-top-left-radius:4px;padding:10px 13px;font-size:13.5px;color:var(--navy)}
+  .foot{padding:16px 20px;text-align:center;font-size:11.5px;color:var(--muted)}
+  .foot a{color:var(--blue-deep);text-decoration:none}
+  .cta-foot{line-height:1.7}
+  .cta-foot a{display:block;margin-top:6px;font-size:13px}
+  .spacer{height:8px}
+  .stack > *{margin-bottom:12px}
+  .pill{display:inline-block;background:#eaf4fb;color:var(--blue-deep);font-weight:700;font-size:11px;padding:3px 9px;border-radius:999px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 1. SCAN LANDING -->
+  <section id="s-scan" class="screen active">
+    <div class="scan-hero">
+      <div class="badge">📷</div>
+      <h1>You just scanned David's QR code</h1>
+      <p>Most people walk past. You stopped and scanned. Here's a real, safe way to help — routed through a Mobilise charity partner toward a home.</p>
+      <div style="width:100%;max-width:320px;margin-top:26px" class="stack">
+        <button class="btn btn-white" onclick="go('s-profile')">See how to help →</button>
+      </div>
+    </div>
+    <div class="foot cta-foot">
+      Sleeping rough, or know someone who is?
+      <a href="#" onclick="go('s-create');return false;"><b>Create your own QR code &amp; profile to receive help →</b></a>
+    </div>
+  </section>
+
+  <!-- 1b. CREATE YOUR OWN QR -->
+  <section id="s-create" class="screen">
+    <div class="topbar">
+      <button class="back" onclick="go('s-scan')">←</button>
+      <div class="brand">MOBILISE<small>Get your own QR</small></div>
+    </div>
+    <div class="body">
+      <h1>Your own card. Your own profile.</h1>
+      <p class="muted">Just like David, you get a profile and a QR code to keep beside you. When someone scans it, they can send Food, Funds, a Gig or Gear — verified and routed safely toward a home. Tell us a little and a Mobilise outreach partner will help you set it up and verify your account.</p>
+      <div class="summary" style="box-shadow:none;border:1px solid var(--line)">
+        <div class="glabel" style="font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--blue-deep);margin-bottom:6px">Start your profile</div>
+        <input class="field" id="c_name" placeholder="Your name (or preferred name)">
+        <input class="field" id="c_goal" placeholder="What are you working toward? (e.g. replace ID, a bond)">
+        <input class="field" id="c_contact" placeholder="Best way to reach you (phone, email, or a service)">
+      </div>
+      <div class="row-info">🤝 A Mobilise partner charity verifies you, helps set up your account to receive donations, and prints your QR card — free.</div>
+      <button class="btn btn-primary" onclick="createQR()">Request my QR card &amp; account</button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="go('s-scan')">Prefer to talk to someone? Contact us</button>
+    </div>
+    <div class="foot">We Are Mobilise · Direct Giving · your details stay private</div>
+  </section>
+
+  <!-- 1c. CREATE CONFIRMATION -->
+  <section id="s-created" class="screen">
+    <div class="topbar">
+      <div class="brand" style="margin:auto;text-align:center">MOBILISE<small>You're on your way</small></div>
+    </div>
+    <div class="body" style="text-align:center">
+      <div class="tick">✓</div>
+      <h1 id="createdTitle">Request received.</h1>
+      <p class="muted" id="createdSub">A Mobilise outreach partner will reach out to verify you, set up your account, and hand you your printed QR card so you can start receiving help.</p>
+      <div class="later" style="text-align:left">
+        <span class="tag">What happens next</span>
+        <div class="msg"><div class="a"></div><div class="bubble"><b>Mobilise:</b> Thanks for reaching out. A local partner will contact you within a few days to verify your details and create your profile &amp; QR card. 💙</div></div>
+      </div>
+      <div class="spacer"></div><div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="go('s-scan')">Back to start</button>
+    </div>
+    <div class="foot">Mobilise Tap · everyone deserves a next step</div>
+  </section>
+
+  <!-- 2. PROFILE -->
+  <section id="s-profile" class="screen">
+    <div class="topbar">
+      <button class="back" onclick="go('s-scan')">←</button>
+      <div class="brand">MOBILISE<small>Tap · act right now</small></div>
+    </div>
+    <div class="body">
+      <div class="pcard">
+        <div class="head">
+          <div class="avatar">D</div>
+          <div>
+            <div class="name">David, 34</div>
+            <span class="verified">✓ Verified by Launch Housing</span>
+          </div>
+        </div>
+        <div class="story">"I lost my ID when my bag was stolen. Without it I can't start the warehouse job I've been offered. I'm not asking for much — just a hand to get back on my feet."</div>
+        <div class="goal">
+          <div class="glabel">David's goal this month</div>
+          <div class="gtext">$340 to replace ID &amp; documents → start work</div>
+          <div class="bar"><i></i></div>
+          <div class="gstat"><span>$210 raised</span><span>62% there</span></div>
+        </div>
+      </div>
+      <h2>How would you like to help?</h2>
+      <p class="muted">Every option is verified and safe — nothing is handed over as cash.</p>
+      <div class="menu">
+        <button class="opt" onclick="choose('funds')"><div class="ic">💙</div><div class="t">Funds</div><div class="d">Toward housing &amp; ID</div></button>
+        <button class="opt" onclick="choose('food')"><div class="ic">🍲</div><div class="t">Food</div><div class="d">A meal at a partner café</div></button>
+        <button class="opt" onclick="choose('gig')"><div class="ic">🛠️</div><div class="t">Offer a gig</div><div class="d">Paid work David can do</div></button>
+        <button class="opt" onclick="choose('gear')"><div class="ic">🧥</div><div class="t">Gear</div><div class="d">Coat, sleeping bag, phone</div></button>
+      </div>
+    </div>
+    <div class="foot">Funds route through Launch Housing · closed-loop, never cash</div>
+  </section>
+
+  <!-- 3. DETAIL -->
+  <section id="s-detail" class="screen">
+    <div class="topbar">
+      <button class="back" onclick="go('s-profile')">←</button>
+      <div class="brand" id="detailTitle">MOBILISE<small>Choose an amount</small></div>
+    </div>
+    <div class="body">
+      <div id="detailBody"></div>
+      <button class="btn btn-primary" onclick="toConfirm()">Continue →</button>
+    </div>
+  </section>
+
+  <!-- 4. CONFIRM -->
+  <section id="s-confirm" class="screen">
+    <div class="topbar">
+      <button class="back" onclick="go('s-detail')">←</button>
+      <div class="brand">MOBILISE<small>Confirm your help</small></div>
+    </div>
+    <div class="body">
+      <div class="summary" id="confirmSummary"></div>
+      <div class="row-info">🔒 <b>Closed-loop &amp; verified.</b> Your help is released by David's caseworker at Launch Housing and can only go toward food, transport, ID, storage or housing — never cash.</div>
+      <button class="btn btn-green" onclick="pay()">Confirm &amp; send help</button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="go('s-profile')">Cancel</button>
+    </div>
+  </section>
+
+  <!-- 5. SUCCESS -->
+  <section id="s-done" class="screen">
+    <div class="topbar">
+      <div class="brand" style="margin:auto;text-align:center">MOBILISE<small>Thank you</small></div>
+    </div>
+    <div class="body" style="text-align:center">
+      <div class="tick">✓</div>
+      <h1 id="doneTitle">You just helped David.</h1>
+      <p class="muted" id="doneSub">Your $36 is on its way through Launch Housing toward a night of housing.</p>
+      <div class="later" style="text-align:left">
+        <span class="tag">📩 See what happened next</span>
+        <p class="muted" style="margin:8px 0 0">In a few weeks you'll get a text with the outcome. Here's a preview:</p>
+        <div class="msg">
+          <div class="a"></div>
+          <div class="bubble"><b>Mobilise:</b> David replaced his ID and started his warehouse shift on Monday. He says thank you. 💙</div>
+        </div>
+      </div>
+      <div class="spacer"></div><div class="spacer"></div>
+      <button class="btn btn-primary" onclick="go('s-profile')">Help again</button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="go('s-scan')">Back to start</button>
+    </div>
+    <div class="foot cta-foot">
+      Know someone who is homeless and could benefit from this?
+      <a href="#" onclick="go('s-create');return false;"><b>Help them create their own QR code &amp; profile →</b></a>
+    </div>
+  </section>
+</div>
+
+<script>
+  var state={type:null,label:null,amount:36,detail:""};
+  function go(id){
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  function createQR(){
+    var n=(document.getElementById('c_name').value||'').trim();
+    document.getElementById('createdTitle').textContent = n ? ('Thanks, '+n+'.') : 'Request received.';
+    go('s-created');
+  }
+  var CONFIG={
+    funds:{label:"Funds toward housing & ID",amts:[[10,"meal + transport"],[36,"a night of housing"],[100,"toward David's goal"]],def:36,unit:"$"},
+    food:{label:"A meal at a partner café",amts:[[8,"hot meal"],[16,"two meals"],[30,"a week of coffees"],],def:8,unit:"$"},
+    gear:{label:"Essential gear",items:["Warm coat","Sleeping bag","Prepaid phone + data","Backpack"]},
+    gig:{label:"Offer paid work"}
+  };
+  function choose(type){
+    state.type=type;
+    var c=CONFIG[type]; state.label=c.label;
+    document.getElementById('detailTitle').innerHTML='MOBILISE<small>'+c.label+'</small>';
+    var el=document.getElementById('detailBody'); var h='';
+    if(type==='funds'||type==='food'){
+      state.amount=c.def;
+      h+='<h2>'+c.label+'</h2><p class="muted">Pick an amount — you can change it.</p><div class="amts">';
+      c.amts.forEach(function(a){h+='<div class="amt" data-a="'+a[0]+'" onclick="pickAmt(this,'+a[0]+')">$'+a[0]+'<small>'+a[1]+'</small></div>'});
+      h+='</div><input class="field" id="customAmt" type="number" placeholder="Other amount ($)" oninput="customAmt(this.value)">';
+      h+='<div class="row-info">Benchmark: <b>$36 = one night of housing</b> through a Mobilise charity partner.</div>';
+    } else if(type==='gear'){
+      state.amount=0;state.detail=c.items[0];
+      h='<h2>Pledge a gear drop</h2><p class="muted">Choose an item. A partner outreach worker collects it from a nearby drop point.</p><div class="amts" style="grid-template-columns:1fr">'+c.items.map(function(it){return '<div class="amt gearopt" onclick="pickGear(this,\''+it+'\')" style="text-align:left;padding:14px 16px">'+it+'</div>'}).join('')+'</div><div class="row-info">You\'ll get a text with the drop point + time.</div>';
+    } else if(type==='gig'){
+      state.amount=0;
+      h+='<h2>Offer David paid work</h2><p class="muted">A short, safe task builds income and a work history — not charity.</p>';
+      h+='<input class="field" placeholder="Task (e.g. garden tidy, moving help)" oninput="state.detail=this.value">';
+      h+='<input class="field" type="number" placeholder="You\'ll pay ($)" oninput="state.amount=Number(this.value)||0">';
+      h+='<div class="row-info">Mobilise + Launch Housing verify both sides and hold payment safely until the task is done.</div>';
+    }
+    el.innerHTML=h;
+    if(type==='gear'){setTimeout(function(){var f=document.querySelector('.gearopt');if(f){f.classList.add('sel');f.textContent='✓ '+f.textContent}},0);}
+    go('s-detail');
+  }
+  function pickAmt(elm,a){document.querySelectorAll('#detailBody .amt').forEach(function(x){x.classList.remove('sel')});elm.classList.add('sel');state.amount=a;var ci=document.getElementById('customAmt');if(ci)ci.value='';}
+  function customAmt(v){v=Number(v);if(v>0){state.amount=v;document.querySelectorAll('#detailBody .amt').forEach(function(x){x.classList.remove('sel')});}}
+  function pickGear(elm,it){document.querySelectorAll('.gearopt').forEach(function(x){x.classList.remove('sel');x.textContent=x.textContent.replace('✓ ','')});elm.classList.add('sel');elm.textContent='✓ '+elm.textContent;state.detail=it;}
+  function toConfirm(){
+    var s=document.getElementById('confirmSummary');var h='';
+    h+='<div class="line"><span>Helping</span><span>David, 34</span></div>';
+    h+='<div class="line"><span>How</span><span>'+state.label+'</span></div>';
+    if(state.detail)h+='<div class="line"><span>Detail</span><span>'+state.detail+'</span></div>';
+    if(state.amount>0)h+='<div class="line"><span>Amount</span><span>$'+state.amount+'</span></div>';
+    else h+='<div class="line"><span>Amount</span><span>In-kind pledge</span></div>';
+    s.innerHTML=h;go('s-confirm');
+  }
+  function pay(){
+    var t=document.getElementById('doneTitle');var sub=document.getElementById('doneSub');
+    t.textContent='You just helped David.';
+    if(state.type==='gear')sub.textContent='Your '+state.detail.toLowerCase()+' pledge is logged. You\'ll get the drop point by text.';
+    else if(state.type==='gig')sub.textContent='Your gig offer is sent. Launch Housing will match David and confirm the details.';
+    else sub.textContent='Your $'+state.amount+' is on its way through Launch Housing toward David\'s goal.';
+    go('s-done');
+  }
+</script>
+</body>
+</html>
